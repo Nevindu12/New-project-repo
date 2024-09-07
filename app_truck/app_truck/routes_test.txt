@@ -1,0 +1,231 @@
+import re
+import math
+
+# Sample data for mechanics and drivers
+mechanics = [
+    {"name": "Mechanic A", "location": (6.927079, 79.861244)},  # Colombo
+    {"name": "Mechanic B", "location": (7.873054, 80.771797)},  # Kandy
+    {"name": "Mechanic C", "location": (6.053519, 80.220978)},  # Galle
+    {"name": "Mechanic D", "location": (8.311400, 80.403651)},  # Anuradhapura
+]
+
+drivers = [
+    {"name": "Driver A", "location": (6.927079, 79.861244)},  # Colombo
+    {"name": "Driver B", "location": (7.873054, 80.771797)},  # Kandy
+    {"name": "Driver C", "location": (6.053519, 80.220978)},  # Galle
+    {"name": "Driver D", "location": (8.311400, 80.403651)},  # Anuradhapura
+]
+
+def haversine(coord1, coord2):
+    """
+    Calculate the great-circle distance between two points 
+    on the Earth's surface given their latitude and longitude.
+
+    Parameters:
+    - coord1: tuple of (latitude, longitude) for the first location
+    - coord2: tuple of (latitude, longitude) for the second location
+
+    Returns:
+    - distance in kilometers between the two points
+    """
+    R = 6371  # Radius of the Earth in kilometers
+    
+    lat1, lon1 = coord1
+    lat2, lon2 = coord2
+    
+    # Convert latitude and longitude from degrees to radians
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    
+    # Haversine formula to calculate the distance
+    a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    
+    distance = R * c
+    return distance
+
+def find_nearest_service(location, service_providers):
+    """
+    Find the nearest service provider (mechanic or driver) 
+    based on the provided location.
+
+    Parameters:
+    - location: tuple of (latitude, longitude) for the customer's location
+    - service_providers: list of dictionaries containing service provider details
+
+    Returns:
+    - A string with the name and phone number of the nearest service provider
+    """
+    distances = []
+    
+    # Calculate distance to each service provider
+    for provider in service_providers:
+        distance = haversine(location, provider['location'])
+        distances.append((provider, distance))
+    
+    if distances:
+        # Find the provider with the minimum distance
+        nearest_provider = min(distances, key=lambda x: x[1])[0]
+        return f"{nearest_provider['name']}, Phone: 123456789"
+    else:
+        return "No service providers available in your area."
+
+def extract_coordinates_from_url(map_url):
+    """
+    Extract latitude and longitude coordinates from a Google Maps or 
+    Apple Maps URL.
+
+    Parameters:
+    - map_url: The URL from which to extract coordinates
+
+    Returns:
+    - A tuple of (latitude, longitude) if coordinates are found, 
+      otherwise None
+    """
+    google_pattern = r"@(-?\d+\.\d+),(-?\d+\.\d+)"  # Regex pattern for Google Maps
+    apple_pattern = r"\?ll=(-?\d+\.\d+),(-?\d+\.\d+)"  # Regex pattern for Apple Maps
+    
+    google_match = re.search(google_pattern, map_url)
+    apple_match = re.search(apple_pattern, map_url)
+    
+    if google_match:
+        # Extract coordinates from Google Maps URL
+        lat, lon = google_match.groups()
+        return float(lat), float(lon)
+    elif apple_match:
+        # Extract coordinates from Apple Maps URL
+        lat, lon = apple_match.groups()
+        return float(lat), float(lon)
+    else:
+        return None
+
+def find_mechanic(map_url):
+    """
+    Find the nearest mechanic based on a map URL provided by the customer.
+
+    Parameters:
+    - map_url: The URL containing the customer's location
+
+    Returns:
+    - A string with the name and phone number of the nearest mechanic
+    """
+    location = extract_coordinates_from_url(map_url)
+    if location:
+        return find_nearest_service(location, mechanics)
+    else:
+        return "Invalid map URL"
+
+def find_driver(map_url, vehicle_type):
+    """
+    Find the nearest driver based on a map URL provided by the customer.
+
+    Parameters:
+    - map_url: The URL containing the customer's location
+    - vehicle_type: The type of vehicle for the driver
+
+    Returns:
+    - A string with the name and phone number of the nearest driver
+    """
+    location = extract_coordinates_from_url(map_url)
+    if location:
+        return find_nearest_service(location, drivers)
+    else:
+        return "Invalid map URL"
+
+# Example usage
+google_maps_url = "https://www.google.com/maps/place/Colombo,+Sri+Lanka/@6.927079,79.861244,12z"
+print(find_mechanic(google_maps_url))
+print(find_driver(google_maps_url, "car"))
+
+
+
+
+
+
+
+
+
+
+
+import re
+import math
+import json
+import requests
+
+def load_service_data(file_path):
+    """Load service provider data from a JSON file."""
+    with open(file_path, 'r') as file:
+        data = json.load(file)
+    return data['mechanics'], data['drivers']
+
+def haversine(coord1, coord2):
+    """Calculate the great-circle distance between two points on the Earth's surface."""
+    R = 6371  # Radius of the Earth in kilometers
+    lat1, lon1 = coord1
+    lat2, lon2 = coord2
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return R * c
+
+def extract_coordinates_from_url(map_url):
+    """Extract coordinates from a Google Maps URL."""
+    google_pattern = r"@(-?\d+\.\d+),(-?\d+\.\d+)"
+    
+    # Try to extract coordinates directly from the URL
+    match = re.search(google_pattern, map_url)
+    if match:
+        lat, lon = map(float, match.groups())
+        return lat, lon
+
+    # Expand shortened URLs and try to extract coordinates again
+    try:
+        response = requests.get(map_url, allow_redirects=True)
+        expanded_url = response.url
+        print(f"Expanded URL: {expanded_url}")  # Debug: Print expanded URL
+        match = re.search(google_pattern, expanded_url)
+        if match:
+            lat, lon = map(float, match.groups())
+            return lat, lon
+    except Exception as e:
+        print(f"Error expanding URL: {e}")
+    
+    return None
+
+def find_nearest_service(location, service_providers):
+    """Find the nearest service provider based on the provided location."""
+    distances = [(provider, haversine(location, tuple(provider['location']))) for provider in service_providers]
+    if distances:
+        nearest_provider, distance = min(distances, key=lambda x: x[1])
+        return f"{nearest_provider['name']}, Phone: 123456789, Distance: {distance:.2f} km"
+    return "No service providers available in your area."
+
+def main():
+    print("=" * 50)
+    print("     Nearest Service Finder")
+    print("=" * 50)
+
+    # Load service data from JSON file
+    mechanics, drivers = load_service_data('service_data.json')
+
+    map_link = input("Please provide your location by pasting a Google Maps or Apple Maps link:\nMap Link: ")
+    service_type = input("Do you need a mechanic or a driver? (Enter 'mechanic' or 'driver'): ").strip().lower()
+
+    location = extract_coordinates_from_url(map_link)
+    if not location:
+        print("\nResult:\nInvalid map URL")
+        return
+
+    if service_type == "mechanic":
+        result = find_nearest_service(location, mechanics)
+    elif service_type == "driver":
+        result = find_nearest_service(location, drivers)
+    else:
+        result = "Invalid service type. Please enter 'mechanic' or 'driver'."
+
+    print("\nResult:")
+    print(result)
+
+if __name__ == "__main__":
+    main()

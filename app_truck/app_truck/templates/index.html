@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Interface</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .chat-container { width: 300px; margin: 0 auto; }
+        .chat-box { border: 1px solid #ddd; padding: 10px; height: 400px; overflow-y: scroll; }
+        .input-box { margin-top: 10px; }
+        input[type="text"] { width: calc(100% - 90px); padding: 5px; }
+        button { width: 80px; padding: 5px; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box"></div>
+        <div class="input-box">
+            <input type="text" id="user-input" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function appendMessage(text, fromUser) {
+            const chatBox = document.getElementById('chat-box');
+            const message = document.createElement('div');
+            message.textContent = (fromUser ? 'You: ' : 'Bot: ') + text;
+            chatBox.appendChild(message);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const userMessage = inputField.value;
+            if (userMessage.trim() === '') return;
+
+            appendMessage(userMessage, true);
+            inputField.value = '';
+
+            // Send the user message to the chatbot
+            fetch('http://127.0.0.1:5000/webhook', { // Replace with your actual endpoint
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage(data.reply, false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                appendMessage('Sorry, there was an error.', false);
+            });
+        }
+    </script>
+</body>
+</html>
+

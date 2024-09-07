@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="public/css/signup.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>SIGN UP</h1>
+            <form action="/signup" method="post">
+                <input placeholder="Name" name="name" type="text" required>
+                <input placeholder="UserName" name="username" type="text" required>
+                <input placeholder="Email" name="email" type="email" required>
+                <input placeholder="Password" name="password" type="password" required>
+                <input placeholder="Phone Number" name="phone_number" type="text" required>
+                <input class="submit-btn" type="submit" value="SIGN UP">
+            </form>
+            <div class="social-login">
+                <p>OR</p>
+                <div class="social-icons">
+                    <a href="#"><img src="public/images/google-icon.png" alt="Google"></a>
+                    <a href="#"><img src="public/images/apple-icon.png" alt="Apple"></a>
+                    <a href="#"><img src="public/images/facebook-icon.png" alt="Facebook"></a>
+                </div>
+            </div>
+            <a class="login-link" href="/login">Already have an account? Login here</a>
+        </div>
+        <div class="image-container">
+            <img src="/tempelates/tow-truck.png" alt="Tow Truck">
+        </div>
+    </div>
+</body>
+
+<style>
+    @import url(https://db.onlinewebfonts.com/c/2da952d097bffd198ec0f0aa3fdd6804?family=JejuHallasan);
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "JejuHallasan";
+        background-color: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        display: flex;
+        width: 800px;
+        height: 650px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .form-container {
+        background-color: #002A8A;
+        padding: 40px;
+        width: 50%;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        font-size: 30px;
+        letter-spacing: 2px;
+    }
+
+    form input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: none;
+        font-family: "JejuHallasan";
+        font-size: 16px;
+    }
+
+    .submit-btn {
+        background-color: #FFD700;
+        color: #000;
+        cursor: pointer;
+    }
+
+    .submit-btn:hover {
+        background-color: #FFC107;
+    }
+
+    .social-login {
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    .social-icons img {
+        width: 30px;
+        margin: 0 10px;
+        cursor: pointer;
+    }
+
+    .social-icons img:hover {
+        opacity: 0.8;
+    }
+
+    .login-link {
+        color: #ddd;
+        text-decoration: none;
+        margin-top: 20px;
+    }
+
+    .login-link:hover {
+        text-decoration: underline;
+    }
+
+    .image-container {
+        width: 50%;
+        background-color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .image-container img {
+        width: 100%;
+        height: auto;
+    }
+</style>
+
+</html>
