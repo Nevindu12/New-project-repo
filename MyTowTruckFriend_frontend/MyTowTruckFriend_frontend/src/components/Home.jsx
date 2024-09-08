@@ -67,7 +67,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/*Message popup & icon*/}
+      {/*Message icon & popup*/}
       <div className="fixed bottom-24 right-10 z-20">
 
         {/* Tooltip */}
@@ -89,6 +89,7 @@ const Home = () => {
       </div>
 
 
+      {/* correct one */}
       {chatVisible && (
         <div
           className="fixed bottom-20 right-10 bg-white border border-gray-300 shadow-lg rounded-lg z-30"

@@ -6,7 +6,7 @@ import twiter from "../assets/twitter.png"
 
 const Footer = () => {
   return (
-    <footer className="mt-20 border-t py-5 border-gray-700 bg-gray-500">
+    <footer className="border-t py-5 border-gray-700 bg-gray-500 pt-12 pb-12">
       <div className="flex flex-row items-start justify-center space-x-20">
         <div>
           <h3 className="text-2xl font-semibold mb-3">TOWY</h3>

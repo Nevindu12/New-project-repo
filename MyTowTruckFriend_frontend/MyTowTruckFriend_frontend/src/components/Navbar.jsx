@@ -1,6 +1,6 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { navItems } from "../constants";
 
@@ -14,25 +14,39 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80">
       <div className="container px-4 mx-auto relative lg:text-sm">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center pt-7 pb-7">
           <div className="flex items-center flex-shrink-0">
             <img className="h-10 w-10 mr-2" src={logo} alt="Logo" />
             <span className="text-xl tracking-tight text-white">TOWY</span>
           </div>
           <ul className="hidden lg:flex ml-14 space-x-12">
-            {navItems.map((item, index) => (
-              <li key={index}>
-                <Link
-                  to={item.href}
-                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 py-2 px-3 rounded-md"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            <Link
+              to="/"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500 py-2 px-3 rounded-md"
+            >
+              Home
+            </Link>
+
+            <Link
+              to="/about"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500 py-2 px-3 rounded-md"
+            >
+              About Us
+            </Link>
+            <Link
+              to="/service"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500 py-2 px-3 rounded-md"
+            >
+              Service
+            </Link>
           </ul>
           <div className="hidden lg:flex justify-center space-x-12 items-center">
-            <Link to="/login" className="bg-gradient-to-r from-yellow-400 to-yellow-500 py-2 px-3 rounded-md">Sign In</Link>
+            <Link
+              to="/login"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500 py-2 px-3 rounded-md"
+            >
+              Sign In
+            </Link>
           </div>
           <div className="lg:hidden md:flex flex-col justify-end">
             <button onClick={toggleNavbar}>
@@ -52,7 +66,13 @@ const Navbar = () => {
               ))}
             </ul>
             <div className="flex space-x-6">
-              <Link to="/login" onClick={toggleNavbar} className="py-2 px-3 rounded-md bg-gradient-to-r from-yellow-400 to-yellow-500">Sign In</Link>
+              <Link
+                to="/login"
+                onClick={toggleNavbar}
+                className="py-2 px-3 rounded-md bg-gradient-to-r from-yellow-400 to-yellow-500"
+              >
+                Sign In
+              </Link>
             </div>
           </div>
         )}
